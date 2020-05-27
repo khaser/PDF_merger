@@ -1,9 +1,7 @@
-<html>
-<head>
-<title> PDFGluer </title>
-</head>
-<h1>This is PDFGluer. Choose folder with files.pdf. Than download file.pdf which includes all pdf files that were in your folder.</h1>
-<a href = "/kek"> click here </a>
 <body>
-</body>
-</html>
+	<form method="post" action="/upload" enctype="multipart/form-data">
+    <input type="file" name="file[]" multiple=""
+	accept="application/pdf" webkitdirectory>
+    <input class="button" type="submit" value="Upload"/>
+	</form>
+<body>

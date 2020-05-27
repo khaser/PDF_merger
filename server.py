@@ -21,7 +21,7 @@ def secure_filename(name, sess):
 
 @app.route("/")
 def index():
-    return render_template("test.html")
+    return render_template("index.html")
 
 @app.route("/favicon.ico")
 def favicon():
