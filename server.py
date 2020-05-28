@@ -27,6 +27,14 @@ def index():
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
+@app.route("/templates/jquery.js")
+def jquery():
+    return render_template("jquery.js")
+
+@app.route("/templates/jquery-ui.js")
+def jqueryui():
+    return render_template("jquery-ui.js")
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']

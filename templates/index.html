@@ -1,7 +1,42 @@
+<head>
+	<script src="templates/jquery.js"></script>
+	<script src="templates/jquery-ui.js"></script>
+	<script>
+		$( function() {
+			$( "#sortable" ).sortable();
+			$( "#sortable" ).disableSelection();
+		} );
+	</script>
+	<style>
+		#sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+		#sortable li { 
+			margin: 0 3px 3px 3px;
+			padding: 0.4em;
+			padding-left: 1.5em;
+			font-size: 1.4em;
+			height: 18px;
+			background: gray;
+		}
+		#sortable li span { position: absolute; margin-left: -1.3em; }
+	</style>
+	<script>
+		function get_permutation(){
+		   var idsInOrder = $("#sortable").sortable("toArray");
+		   console.log(idsInOrder);
+		}
+		var counter = 1;
+		function appendThing() {
+		    $("<li id='" + counter + "' class='ui-state-default'>Name" + counter + "</li>").appendTo($("#sortable"));
+		    $("#sortable").sortable({ refresh: sortable })
+		    counter++;
+		};
+	</script>
+</head>
 <body>
 	<form method="post" action="/upload" enctype="multipart/form-data">
     <input type="file" name="file[]" multiple=""
 	accept="application/pdf" webkitdirectory>
     <input class="button" type="submit" value="Upload"/>
 	</form>
+	<ul id="sortable" class="connectedSortable"></ul>
 <body>
