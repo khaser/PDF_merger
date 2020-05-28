@@ -1,6 +1,10 @@
 #!/bin/bash
 folder=`pwd`
-cd $1
-sid=`echo $1 | cut -d '/' -f 2`
+cd $folder/tmp/$1
+sid=`echo $1`
 echo $sid
-pdfunite `ls | awk '/.*R-LR|R-LA|R-LB.*\.pdf/{print $0}'` $folder/result/$sid.pdf
+cd $folder/tmp/$sid
+LR=`ls | awk '/.*R-LR.*\.pdf/{print $0}'`
+LA=`ls | awk '/.*R-LA.*\.pdf/{print $0}'`
+LB=`ls | awk '/.*R-LB.*\.pdf/{print $0}'`
+pdfunite `(echo $LR; echo $LA; echo $LB) | cat` $folder/result/$sid.pdf
