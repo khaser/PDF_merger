@@ -55,6 +55,23 @@ def upload():
     os.system('./solver.sh ' + sess)
     return send_from_directory('result', sess + '.pdf')
 
+@app.route('/upload2', methods=['POST', 'GET'])
+def upload2():
+    files = request.files.getlist("files[]")
+    sess = "id" + str(random.randint(0, 10**30))
+    path = os.path.join(app.config['UPLOAD_FOLDER'], sess)
+    os.makedirs(path, exist_ok=True)
+    cnt = 0
+    for data in files:
+        if (allowed_file(data.filename)):
+            cnt += 1
+            data.save(os.path.join(path, secure_filename(data.filename, sess)))
+    if (cnt == 0):
+        return 'no pdf files to merge(need R_LR, R-LA, R-LB substring in file name)'
+    os.system('./solver.sh ' + sess)
+    return send_from_directory('result', sess + '.pdf')
+
+
 
 def main():
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
