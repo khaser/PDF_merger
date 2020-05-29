@@ -2,12 +2,7 @@
 	<title>PDF merger</title>
 	<script src="templates/jquery.js"></script>
 	<script src="templates/jquery-ui.js"></script>
-	<script>
-		$( function() {
-			$( "#sortable" ).sortable();
-			$( "#sortable" ).disableSelection();
-		} );
-	</script>
+	<script src="templates/sortable.js"></script>
 	<style>
 		#sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
 		#sortable li {
@@ -20,54 +15,27 @@
 		}
 		#sortable li span { position: absolute; margin-left: -1.3em; }
 	</style>
-	<script>
-		function get_permutation(){
-			var idsInOrder = $("#sortable").sortable("toArray");
-			return idsInOrder;
-		}
-		function appendThing(name) {
-			$("<li id='" + name + "' class='ui-state-default'>" + name + "</li>").appendTo($("#sortable"));
-			$("#sortable").sortable({ refresh: sortable })
-		};
-	</script>
 </head>
 <body>
-	<form method="post" action="/upload" enctype="multipart/form-data">
+	<form method="post" action="/uploadFolder" enctype="multipart/form-data">
 		<input type="file" name="file[]" multiple=""
 			accept="application/pdf" webkitdirectory>
 		<input class="button" type="submit" value="Upload"/>
 	</form>
 
 	<form id="form2" method="post" enctype="multipart/form-data">
-		<input id="select" type="file"  multiple />
+		<input id="select" type="file" accept="application/pdf" multiple />
 		<input id="update" type="button" value="Add files"/>
 		<input type="submit" value="Merge" name="submit" />
 		<script>
 			update.onclick = function() {
 				let files = select.files;
 				for (let i = 0; i < files.length; ++i) {
-					let file = files[i];
-					appendThing(file.name);
+					appendFile(files[i]);
 				}
 				form2.reset()
 			};
 		</script>
 	</form>
-
-	<script>
-		const form = document.getElementById('form2');
-		form.addEventListener('submit', e => {
-			e.preventDefault();
-			const formData = new FormData();
-			get_permutation().forEach(e => formData.append('files[]', e));
-
-			fetch('upload2', {
-				method: 'POST',
-				body: formData,
-			}).then(response => {
-				console.log(response)
-			})
-		});
-	</script>
 	<ul id="sortable" class="connectedSortable"></ul>
 <body>

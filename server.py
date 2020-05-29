@@ -35,12 +35,16 @@ def jquery():
 def jqueryui():
     return render_template("jquery-ui.js")
 
+@app.route("/templates/sortable.js")
+def sortable():
+    return render_template("sortable.js")
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
 
-@app.route('/upload', methods=['POST', 'GET'])
-def upload():
+@app.route('/uploadFolder', methods=['POST', 'GET'])
+def uploadFolder():
     files = request.files.getlist("file[]")
     sess = "id" + str(random.randint(0, 10**30))
     path = os.path.join(app.config['UPLOAD_FOLDER'], sess)
@@ -52,25 +56,21 @@ def upload():
             data.save(os.path.join(path, secure_filename(data.filename, sess)))
     if (cnt == 0):
         return 'no pdf files to merge(need R_LR, R-LA, R-LB substring in file name)'
-    os.system('./solver.sh ' + sess)
-    return send_from_directory('result', sess + '.pdf')
+    os.system('./mergeFolder.sh ' + sess)
+    return send_from_directory('result', sess + '.pdf', mimetype='application/pdf')
 
-@app.route('/upload2', methods=['POST', 'GET'])
-def upload2():
+@app.route('/upload', methods=['POST', 'GET'])
+def upload():
     files = request.files.getlist("files[]")
     sess = "id" + str(random.randint(0, 10**30))
     path = os.path.join(app.config['UPLOAD_FOLDER'], sess)
     os.makedirs(path, exist_ok=True)
     cnt = 0
     for data in files:
-        if (allowed_file(data.filename)):
-            cnt += 1
-            data.save(os.path.join(path, secure_filename(data.filename, sess)))
-    if (cnt == 0):
-        return 'no pdf files to merge(need R_LR, R-LA, R-LB substring in file name)'
-    os.system('./solver.sh ' + sess)
+        cnt += 1
+        data.save(os.path.join(path, str(cnt) + ".pdf"))
+    os.system('./merge.sh ' + sess)
     return send_from_directory('result', sess + '.pdf')
-
 
 
 def main():
