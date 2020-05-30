@@ -39,6 +39,11 @@ def jqueryui():
 def sortable():
     return render_template("sortable.js")
 
+@app.route("/templates/dnd.js")
+def dnd():
+    return render_template("dnd.js")
+
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']

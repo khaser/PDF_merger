@@ -1,10 +1,19 @@
+<!DOCTYPE html>
 <head>
 	<title>PDF merger</title>
 	<script src="templates/jquery.js"></script>
 	<script src="templates/jquery-ui.js"></script>
 	<script src="templates/sortable.js"></script>
+	<script src="templates/dnd.js"></script>
 	<style>
-		#sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+		#drag{
+			position: fixed;
+			top: 0;
+			left: 0;
+			height: 100%;
+			width : 100%;
+		}
+		#sortable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
 		#sortable li {
 			margin: 0 3px 3px 3px;
 			padding: 0.4em;
@@ -17,25 +26,27 @@
 	</style>
 </head>
 <body>
-	<form method="post" action="/uploadFolder" enctype="multipart/form-data">
-		<input type="file" name="file[]" multiple=""
-			accept="application/pdf" webkitdirectory>
-		<input class="button" type="submit" value="Upload"/>
-	</form>
-
-	<form id="form2" method="post" enctype="multipart/form-data">
-		<input id="select" type="file" accept="application/pdf" multiple />
-		<input id="update" type="button" value="Add files"/>
-		<input type="submit" value="Merge" name="submit" />
-		<script>
-			update.onclick = function() {
-				let files = select.files;
-				for (let i = 0; i < files.length; ++i) {
-					appendFile(files[i]);
-				}
-				form2.reset()
-			};
-		</script>
-	</form>
-	<ul id="sortable" class="connectedSortable"></ul>
-<body>
+    <div class="drag" id="drag" ondragenter ="dropenter(event);" ondragover ="allow(event);" ondrop = "drop(event)">
+		<form method="post" action="/uploadFolder" enctype="multipart/form-data">
+			<input type="file" name="file[]" multiple=""
+				accept="application/pdf" webkitdirectory>
+			<input class="button" type="submit" value="Upload"/>
+		</form>
+	
+		<form id="form2" method="post" enctype="multipart/form-data">
+			<input id="select" type="file" accept="application/pdf" multiple />
+			<input id="update" type="button" value="Add files"/>
+			<input type="submit" value="Merge" name="submit" />
+			<script>
+				update.onclick = function() {
+					let files = select.files;
+					for (let i = 0; i < files.length; ++i) {
+						appendFile(files[i]);
+					}
+					form2.reset()
+				};
+			</script>  
+		</form>
+		<ul id="sortable" class="connectedSortable"></ul>
+	</div>
+</body>
