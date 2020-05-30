@@ -1,4 +1,5 @@
 let unsortForm = new FormData();
+let fl = new Array();
 
 $(function() {
 	$( "#sortable" ).sortable();
@@ -15,17 +16,18 @@ function get_permutation(){
 let cnt = 0;
 function appendFile(el) {
 	unsortForm.append('files[]', el);
+	fl.push(0);	
 	$("<li id='" + cnt + "' class='ui-state-default'>" + el.name + "<img src='/delete.png' height='20' align='right' onclick='deleteFile(" + cnt + ")'> </li>").appendTo($("#sortable"));
 	cnt++;
 	$("#sortable").sortable({ refresh: sortable });
 };
 
 function deleteFile(number) {
-	console.log(number)
-	console.log(get_permutation())
-	for (let i = 0; i < $('ul li').length; ++i) {
-		if (get_permutation()[i] == number)
+	for (let i = number; i < $('ul li').length; ++i) {
+		if (get_permutation()[i] == number) {
 			$('ul li')[i].hidden = 1;
+			fl[$('ul li')[i].id] = 1
+		}
 	}
 }
 
@@ -35,7 +37,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		let formData = new FormData(); 
 		get_permutation().forEach(e => {
-			if ($('ul li')[e].hidden == 0) {
+			if (fl[e] == 0) {
 				formData.append('files[]', unsortForm.getAll("files[]")[e]);
 			}
 		});
