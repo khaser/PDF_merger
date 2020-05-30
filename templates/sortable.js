@@ -21,7 +21,12 @@ function appendFile(el) {
 };
 
 function deleteFile(number) {
-	$('ul li')[number].hidden = 1;
+	console.log(number)
+	console.log(get_permutation())
+	for (let i = 0; i < $('ul li').length; ++i) {
+		if (get_permutation()[i] == number)
+			$('ul li')[i].hidden = 1;
+	}
 }
 
 $(document).ready(function() {
