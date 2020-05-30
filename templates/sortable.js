@@ -1,8 +1,11 @@
 let unsortForm = new FormData();
+
 $(function() {
 	$( "#sortable" ).sortable();
 	$( "#sortable" ).disableSelection();
 });
+
+$( "#sortable" ).disableSelection();
 
 function get_permutation(){
 	var idsInOrder = $("#sortable").sortable("toArray");
@@ -12,36 +15,26 @@ function get_permutation(){
 let cnt = 0;
 function appendFile(el) {
 	unsortForm.append('files[]', el);
-	$("<li id='" + cnt++ + "' class='ui-state-default'>" + el.name + "</li>").appendTo($("#sortable"));
+	$("<li id='" + cnt + "' class='ui-state-default'>" + el.name + "<img src='/delete.png' height='20' align='right' onclick='deleteFile(" + cnt + ")'> </li>").appendTo($("#sortable"));
+	cnt++;
 	$("#sortable").sortable({ refresh: sortable });
 };
+
+function deleteFile(number) {
+	$('ul li')[number].hidden = 1;
+}
 
 $(document).ready(function() {
 	const form = document.getElementById('form2');
 	form.addEventListener('submit', e => {
 		e.preventDefault();
 		let formData = new FormData(); 
-		get_permutation().forEach(e => formData.append('files[]', unsortForm.getAll("files[]")[e]));
+		get_permutation().forEach(e => {
+			if ($('ul li')[e].hidden == 0) {
+				formData.append('files[]', unsortForm.getAll("files[]")[e]);
+			}
+		});
 		
-		// $.ajax({
-		//     url: '/upload',
-		//     data: formData, 
-		// 	type: 'POST',
-		// 	contentType: false,
-		// 	processData: false,
-		//     success: function (data, status, xhr) {
-		// 		console.log(data)
-		// 	    var pdfFile = new Blob([data]);
-		// 		const url = URL.createObjectURL(pdfFile);
-				
-		// 		const dummy = document.createElement('a');
-		// 		dummy.href = url;
-		// 		dummy.download = 'my-filename.ico';
-				
-		// 		document.body.appendChild(dummy);
-		// 		dummy.click();
-		//     }
-		// });
 		fetch('/upload', {
 		    method: 'POST',
 		    body: formData,

@@ -27,6 +27,11 @@ def index():
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
+@app.route("/delete.png")
+def delete():
+    print('kekw')
+    return send_from_directory(os.path.join(app.root_path, 'static'), 'delete.png')
+
 @app.route("/templates/jquery.js")
 def jquery():
     return render_template("jquery.js")
