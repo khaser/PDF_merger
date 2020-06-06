@@ -64,7 +64,7 @@ def uploadFolder():
             data.save(os.path.join(path, secure_filename(data.filename, sess)))
     if (cnt == 0):
         return 'no pdf files to merge(need R_LR, R-LA, R-LB substring in file name)'
-    os.system('./mergeFolder.sh ' + sess)
+    os.system('./mergeFolder.py ' + sess)
     return send_from_directory('result', sess + '.pdf')
 
 @application.route('/upload', methods=['POST', 'GET'])
