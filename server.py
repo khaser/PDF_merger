@@ -1,6 +1,5 @@
 #!/usr/bin/python3.7
 
-import asyncio
 import logging
 import random
 from flask import Flask, render_template, request, flash, redirect, send_from_directory
@@ -9,8 +8,8 @@ import os
 UPLOAD_FOLDER = '/home/khaser/Documents/Work/PDF_merger/tmp' 
 ALLOWED_EXTENSIONS = {'pdf'}
 
-app = Flask(__name__)
-app.secret_key = "abracadabra"
+application = Flask(__name__)
+application.secret_key = "abracadabra"
 log = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG, format="> %(asctime)-15s %(levelname)-8s || %(message)s")
 
@@ -19,44 +18,44 @@ def secure_filename(name, sess):
     name = name.replace(' ', salt)
     return name.rsplit('/', 1)[1]
 
-@app.route("/")
+@application.route("/")
 def index():
     return render_template("index.html")
 
-@app.route("/favicon.ico")
+@application.route("/favicon.ico")
 def favicon():
-    return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
+    return send_from_directory(os.path.join(application.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
-@app.route("/delete.png")
+@application.route("/delete.png")
 def delete():
-    return send_from_directory(os.path.join(app.root_path, 'static'), 'delete.png')
+    return send_from_directory(os.path.join(application.root_path, 'static'), 'delete.png')
 
-@app.route("/templates/jquery.js")
+@application.route("/templates/jquery.js")
 def jquery():
     return render_template("jquery.js")
 
-@app.route("/templates/jquery-ui.js")
+@application.route("/templates/jquery-ui.js")
 def jqueryui():
     return render_template("jquery-ui.js")
 
-@app.route("/templates/sortable.js")
+@application.route("/templates/sortable.js")
 def sortable():
     return render_template("sortable.js")
 
-@app.route("/templates/dnd.js")
+@application.route("/templates/dnd.js")
 def dnd():
     return render_template("dnd.js")
 
 
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
+           filename.rsplit('.', 1)[1] in application.config['ALLOWED_EXTENSIONS']
 
-@app.route('/uploadFolder', methods=['POST', 'GET'])
+@application.route('/uploadFolder', methods=['POST', 'GET'])
 def uploadFolder():
     files = request.files.getlist("file[]")
     sess = "id" + str(random.randint(0, 10**30))
-    path = os.path.join(app.config['UPLOAD_FOLDER'], sess)
+    path = os.path.join(application.config['UPLOAD_FOLDER'], sess)
     os.makedirs(path, exist_ok=True)
     cnt = 0
     for data in files:
@@ -66,13 +65,13 @@ def uploadFolder():
     if (cnt == 0):
         return 'no pdf files to merge(need R_LR, R-LA, R-LB substring in file name)'
     os.system('./mergeFolder.sh ' + sess)
-    return send_from_directory('result', sess + '.pdf', mimetype='application/pdf')
+    return send_from_directory('result', sess + '.pdf', mimetype='applicationlication/pdf')
 
-@app.route('/upload', methods=['POST', 'GET'])
+@application.route('/upload', methods=['POST', 'GET'])
 def upload():
     files = request.files.getlist("files[]")
     sess = "id" + str(random.randint(0, 10**30))
-    path = os.path.join(app.config['UPLOAD_FOLDER'], sess)
+    path = os.path.join(application.config['UPLOAD_FOLDER'], sess)
     os.makedirs(path, exist_ok=True)
     cnt = 0
     for data in files:
@@ -83,9 +82,9 @@ def upload():
 
 
 def main():
-    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-    app.config['ALLOWED_EXTENSIONS'] = ALLOWED_EXTENSIONS
-    app.run(host='0.0.0.0', debug=True, port=80)
+    application.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    application.config['ALLOWED_EXTENSIONS'] = ALLOWED_EXTENSIONS
+    application.run(host='0.0.0.0', debug=True, port=80)
 
 if __name__ == "__main__":
     main()

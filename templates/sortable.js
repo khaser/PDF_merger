@@ -23,8 +23,8 @@ function appendFile(el) {
 };
 
 function deleteFile(number) {
-	for (let i = number; i < $('ul li').length; ++i) {
-		if (get_permutation()[i] == number) {
+	for (let i = 0; i < $('ul li').length; ++i) {
+		if ($('ul li')[i].id == number) {
 			$('ul li')[i].hidden = 1;
 			fl[$('ul li')[i].id] = 1
 		}
