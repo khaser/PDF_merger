@@ -65,7 +65,7 @@ def uploadFolder():
     if (cnt == 0):
         return 'no pdf files to merge(need R_LR, R-LA, R-LB substring in file name)'
     os.system('./mergeFolder.sh ' + sess)
-    return send_from_directory('result', sess + '.pdf', mimetype='applicationlication/pdf')
+    return send_from_directory('result', sess + '.pdf')
 
 @application.route('/upload', methods=['POST', 'GET'])
 def upload():
@@ -76,8 +76,9 @@ def upload():
     cnt = 0
     for data in files:
         cnt += 1
-        data.save(os.path.join(path, str(cnt) + ".pdf"))
-    os.system('./merge.sh ' + sess)
+        s = str(cnt).zfill(7)
+        data.save(os.path.join(path, s + ".pdf"))
+    os.system('./merge.py ' + sess)
     mem_clear(path)
     return send_from_directory('result', sess + '.pdf')
 
