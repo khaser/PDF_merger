@@ -78,8 +78,16 @@ def upload():
         cnt += 1
         data.save(os.path.join(path, str(cnt) + ".pdf"))
     os.system('./merge.sh ' + sess)
+    mem_clear(path)
     return send_from_directory('result', sess + '.pdf')
 
+def mem_clear(sess):
+    for root, dirs, files in os.walk(sess, topdown=False):
+        for name in files:
+            os.remove(os.path.join(root, name))
+        for name in dirs:
+            os.rmdir(os.path.join(root, name))
+    os.rmdir(sess)
 
 def main():
     application.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
