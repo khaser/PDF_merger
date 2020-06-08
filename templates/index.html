@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-	<title>PDF merger</title>
+	<title>PDF склейщик</title>
 	<script src="templates/jquery.js"></script>
 	<script src="templates/jquery-ui.js"></script>
 	<script src="templates/sortable.js"></script>
@@ -27,12 +27,25 @@
 </head>
 <body>
     <div class="drag" id="drag" ondragenter ="dropenter(event);" ondragover ="allow(event);" ondrop = "drop(event)">
+		Возвращает pdf. Клеит LR LA LB в папке
 		<form method="post" action="/uploadFolder" enctype="multipart/form-data">
 			<input type="file" name="file[]" multiple=""
 				accept="application/pdf" webkitdirectory>
 			<input class="button" type="submit" value="Upload"/>
 		</form>
-	
+		Возвращает zip. Клеит LR LA LB в папке и всех подпапках сохраняя вложенность
+		<form method="post" action="/uploadRecursive" enctype="multipart/form-data">
+			<input type="file" name="file[]" multiple=""
+				accept="application/pdf" webkitdirectory>
+			<input class="button" type="submit" value="Upload"/>
+		</form>
+		Возвращает список форматов pdf файлов в папке
+        <form method="post" action="/uploadTypes" enctype="multipart/form-data">
+			<input type="file" name="file[]" multiple=""
+				accept="application/pdf" webkitdirectory>
+			<input class="button" type="submit" value="Upload"/>
+		</form>
+		Склейка по заданному порядку
 		<form id="form2" method="post" enctype="multipart/form-data">
 			<input id="select" type="file" accept="application/pdf" multiple />
 			<input id="update" type="button" value="Add files"/>
