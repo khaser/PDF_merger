@@ -39,6 +39,12 @@
 				accept="application/pdf" webkitdirectory>
 			<input class="button" type="submit" value="Upload"/>
 		</form>
+		Возвращает zip. Клеит pdf в папке согласно Excel файлу в той же папке
+		<form method="post" action="/uploadExcel" enctype="multipart/form-data">
+			<input type="file" name="file[]" multiple=""
+				accept="application/pdf" webkitdirectory>
+			<input class="button" type="submit" value="Upload"/>
+		</form>
 		Возвращает список форматов pdf файлов в папке
         <form method="post" action="/uploadTypes" enctype="multipart/form-data">
 			<input type="file" name="file[]" multiple=""
