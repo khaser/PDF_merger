@@ -22,10 +22,6 @@ def index():
 def favicon():
     return send_from_directory(os.path.join(application.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1] in application.config['ALLOWED_EXTENSIONS']
-
 @application.route('/uploadFolder', methods=['POST', 'GET'])
 def uploadFolder():
     files = request.files.getlist("file[]")
@@ -138,6 +134,11 @@ def zipdir(path, ziph):
 def is_fileExcel(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in {'xlsx'}
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in application.config['ALLOWED_EXTENSIONS']
+
 
 def main():
     application.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
