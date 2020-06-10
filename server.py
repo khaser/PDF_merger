@@ -6,7 +6,7 @@ import zipfile
 from flask import Flask, render_template, request, flash, redirect, send_from_directory
 import os
 
-UPLOAD_FOLDER = '/home/khaser/Documents/Work/PDF_merger/tmp' 
+UPLOAD_FOLDER = os.path.join(os.path.split(os.path.abspath(__file__))[0], 'tmp')
 ALLOWED_EXTENSIONS = {'pdf'}
 
 application = Flask(__name__)

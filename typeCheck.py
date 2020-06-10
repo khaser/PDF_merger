@@ -27,6 +27,7 @@ for i in d1:
         continue
     for cnt in range(2,6):
         d[i + 'x' + str(cnt)] = [d[i][0] * cnt, d[i][1] * cnt, d[i][2]]
+
 with open(outpath,'w') as f:
     for name in files:
         pdfcur = PdfFileReader(open(os.path.join(path, name), "rb"))
