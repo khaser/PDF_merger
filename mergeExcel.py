@@ -13,12 +13,18 @@ outpath = os.path.join(path, 'result', sess)
 path = os.path.join(path, 'tmp', sess)
 
 def addPDF(name, stream):
-    pdfcur = PdfFileReader(open(os.path.join(path, name), "rb"))
-    for i in range(pdfcur.getNumPages()):
-        stream.addPage(pdfcur.getPage(i))
+    if (os.path.exists(os.path.join(path, name))):
+    	pdfcur = PdfFileReader(open(os.path.join(path, name), "rb"))
+    	for i in range(pdfcur.getNumPages()):
+  	    stream.addPage(pdfcur.getPage(i))
+    else:
+        not_found.append(name)
 
 wb = openpyxl.load_workbook(filename = os.path.join(path, 'merge.xlsx'))
 sheet = wb[wb.sheetnames[0]]
+
+global not_found
+not_found = []
 
 for sheet_name in wb.sheetnames:
     sheet = wb[sheet_name]
@@ -34,6 +40,7 @@ for sheet_name in wb.sheetnames:
         if (file.font.b == True):
             cur = file.value
             continue;
+        file.value = file.value
         d.setdefault(cur, []).append(file.value) 
         if (empty_cnt > 5):
             break;
@@ -50,3 +57,11 @@ for sheet_name in wb.sheetnames:
         outputStream = open(fout + '.pdf', "wb")
         output.write(outputStream)
         outputStream.close()
+
+report = open(os.path.join(outpath, "report.txt"), 'w') 
+if (len(not_found) != 0):
+    print("Мы не нашли след. файлы, но все равно склеили без них:", file = report)
+else:
+    print("Склейка успешна, все файлы на месте", file = report)
+print(*not_found, sep = '\n', file=report)
+report.close()

@@ -31,31 +31,35 @@
 		<form method="post" action="/uploadFolder" enctype="multipart/form-data">
 			<input type="file" name="file[]" multiple=""
 				accept="application/pdf" webkitdirectory>
-			<input class="button" type="submit" value="Upload"/>
+			<input class="button" type="submit" value="Склеить"/>
 		</form>
+		<br>
 		Возвращает zip. Клеит LR LA LB в папке и всех подпапках сохраняя вложенность
 		<form method="post" action="/uploadRecursive" enctype="multipart/form-data">
 			<input type="file" name="file[]" multiple=""
 				accept="application/pdf" webkitdirectory>
-			<input class="button" type="submit" value="Upload"/>
+			<input class="button" type="submit" value="Склеить"/>
 		</form>
+		<br>
 		Возвращает zip. Клеит pdf в папке согласно Excel файлу в той же папке
 		<form method="post" action="/uploadExcel" enctype="multipart/form-data">
 			<input type="file" name="file[]" multiple=""
 				accept="application/pdf" webkitdirectory>
-			<input class="button" type="submit" value="Upload"/>
+			<input class="button" type="submit" value="Склеить"/>
 		</form>
+		<br>
 		Возвращает список форматов pdf файлов в папке
         <form method="post" action="/uploadTypes" enctype="multipart/form-data">
 			<input type="file" name="file[]" multiple=""
 				accept="application/pdf" webkitdirectory>
-			<input class="button" type="submit" value="Upload"/>
+			<input class="button" type="submit" value="Склеить"/>
 		</form>
+		<br>
 		Склейка по заданному порядку
 		<form id="form2" method="post" enctype="multipart/form-data">
 			<input id="select" type="file" accept="application/pdf" multiple />
-			<input id="update" type="button" value="Add files"/>
-			<input type="submit" value="Merge" name="submit" />
+			<input id="update" type="button" value="Добавить выбранное"/>
+			<input type="submit" value="Склеить" name="submit" />
 			<script>
 				update.onclick = function() {
 					let files = select.files;

@@ -14,11 +14,6 @@ application.secret_key = "abracadabra"
 log = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG, format="> %(asctime)-15s %(levelname)-8s || %(message)s")
 
-def secure_filename(name, sess):
-    salt = sess + 'abac@#!DSAaba'
-    name = name.replace(' ', salt)
-    return name.rsplit('/', 1)[1]
-
 @application.route("/")
 def index():
     return render_template("index.html")
@@ -62,7 +57,7 @@ def uploadFolder():
     for data in files:
         if (allowed_file(data.filename)):
             cnt += 1
-            data.save(os.path.join(path, secure_filename(data.filename, sess)))
+            data.save(os.path.join(path, os.path.split(data.filename)[1]))
     if (cnt == 0):
         return 'no pdf files to merge(need R_LR, R-LA, R-LB substring in file name)'
     os.system('./mergeFolder.py ' + sess)
