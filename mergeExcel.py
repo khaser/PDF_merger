@@ -40,7 +40,7 @@ for sheet_name in wb.sheetnames:
         if (file.font.b == True):
             cur = file.value
             continue;
-        file.value = file.value
+        file.value = file.value + '.pdf'
         d.setdefault(cur, []).append(file.value) 
         if (empty_cnt > 5):
             break;
