@@ -17,7 +17,7 @@ let cnt = 0;
 function appendFile(el) {
 	unsortForm.append('files[]', el);
 	fl.push(0);	
-	$("<li id='" + cnt + "' class='ui-state-default'>" + el.name + "<img src='/delete.png' height='20' align='right' onclick='deleteFile(" + cnt + ")'> </li>").appendTo($("#sortable"));
+	$("<li id='" + cnt + "' class='ui-state-default'>" + el.name + "<img src='/static/delete.png' height='20' align='right' onclick='deleteFile(" + cnt + ")'> </li>").appendTo($("#sortable"));
 	cnt++;
 	$("#sortable").sortable({ refresh: sortable });
 };

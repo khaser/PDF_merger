@@ -22,27 +22,6 @@ def index():
 def favicon():
     return send_from_directory(os.path.join(application.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
-@application.route("/delete.png")
-def delete():
-    return send_from_directory(os.path.join(application.root_path, 'static'), 'delete.png')
-
-@application.route("/templates/jquery.js")
-def jquery():
-    return render_template("jquery.js")
-
-@application.route("/templates/jquery-ui.js")
-def jqueryui():
-    return render_template("jquery-ui.js")
-
-@application.route("/templates/sortable.js")
-def sortable():
-    return render_template("sortable.js")
-
-@application.route("/templates/dnd.js")
-def dnd():
-    return render_template("dnd.js")
-
-
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in application.config['ALLOWED_EXTENSIONS']

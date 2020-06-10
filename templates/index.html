@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <head>
 	<title>PDF склейщик</title>
-	<script src="templates/jquery.js"></script>
-	<script src="templates/jquery-ui.js"></script>
-	<script src="templates/sortable.js"></script>
-	<script src="templates/dnd.js"></script>
+	<script src="{{url_for('static', filename = 'jquery.js')}}"></script>
+	<script src="{{url_for('static', filename = 'jquery-ui.js')}}"></script>
+	<script src="{{url_for('static', filename = 'sortable.js')}}"></script>
+	<script src="{{url_for('static', filename = 'dnd.js')}}"></script>
 	<style>
 		#drag{
 			position: fixed;
