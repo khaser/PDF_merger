@@ -31,10 +31,13 @@ for sheet_name in wb.sheetnames:
     cur = "trash"
 
     for i in range(1, 100500):
+        if (empty_cnt > 5):
+            break;
         file = sheet.cell(row=i, column=1)
         if (file.value == None):
             empty_cnt += 1;
             continue;
+        empty_cnt = 0;
         if (file.font.b == True):
             cur = file.value
             continue;
@@ -43,8 +46,6 @@ for sheet_name in wb.sheetnames:
             d.setdefault(cur, []).append(file.value) 
         else:
             not_found.append(file.value)
-        if (empty_cnt > 5):
-            break;
 
     for i in d.items():
         fout, files = i[0], i[1]
@@ -58,6 +59,13 @@ for sheet_name in wb.sheetnames:
         outputStream = open(fout + '.pdf', "wb")
         output.write(outputStream)
         outputStream.close()
+    report = open(os.path.join(outpath, "Отчет.txt"), 'a')
+    for i in d.items():
+        print('Файл', i[0], 'был склеен из:', file = report)
+        print(*i[1], sep = '\n', end = '\n\n', file = report)
+    report.close()
+
+
 
 
 report = open(os.path.join(outpath, "Не найденные файлы.txt"), 'w') 
@@ -67,13 +75,6 @@ else:
     print("Все файлы на месте", file = report)
 print(*not_found, sep = '\n', file = report)
 report.close()
-
-report = open(os.path.join(outpath, "Отчет.txt"), 'w')
-for i in d.items():
-    print('Файл', i[0], 'был склеен из:', file = report)
-    print(*i[1], sep = '\n', end = '\n\n', file = report)
-report.close()
-
 
 d1 = {'A0' : [2384, 3370,200], 'A1' : [1684, 2384,150], 'A2' : [1191,1684,120], 'A3' : [842,1191,95], 'A4' : [595,842,70], 'A5' : [420, 595,60], 'A6' : [298, 420,50], 'A7' : [210, 298,40], 'A8' : [147, 210,28],'A9' : [105,147,27], 'A10' : [74 ,105,23]}
 d = {'A0' : [2384, 3370,200], 'A1' : [1684, 2384,150], 'A2' : [1191,1684,120], 'A3' : [842,1191,95], 'A4' : [595,842,70], 'A5' : [420, 595,60], 'A6' : [298, 420,50], 'A7' : [210, 298,40], 'A8' : [147, 210,28],'A9' : [105,147,27], 'A10' : [74 ,105,23]}
