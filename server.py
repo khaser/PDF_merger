@@ -1,11 +1,7 @@
 #!/usr/bin/python3.7
+# -*- coding: utf-8 -*-
 
-import logging
-import random
-import zipfile
-import os
-import openpyxl
-import sys
+import logging, random, zipfile, os, openpyxl, sys
 from flask import Flask, render_template, request, flash, redirect, send_from_directory
 from PyPDF2 import PdfFileReader, PdfFileWriter
 
@@ -171,33 +167,38 @@ def mergeRecursive(sess):
 
 
 def typeCheck(name, outfile, sheet = ''):
-	d1 = {'A0' : [2384, 3370,200], 'A1' : [1684, 2384,150], 'A2' : [1191,1684,120], 'A3' : [842,1191,95], 'A4' : [595,842,70], 'A5' : [420, 595,60], 'A6' : [298, 420,50], 'A7' : [210, 298,40], 'A8' : [147, 210,28],'A9' : [105,147,27], 'A10' : [74 ,105,23]}
-	d = {'A0' : [2384, 3370,200], 'A1' : [1684, 2384,150], 'A2' : [1191,1684,120], 'A3' : [842,1191,95], 'A4' : [595,842,70], 'A5' : [420, 595,60], 'A6' : [298, 420,50], 'A7' : [210, 298,40], 'A8' : [147, 210,28],'A9' : [105,147,27], 'A10' : [74 ,105,23]}
+	d1 = {'A0' : [2384, 3370], 'A1' : [1684, 2384], 'A2' : [1191,1684], 'A3' : [842,1191], 'A4' : [595,842], 'A5' : [420, 595], 'A6' : [298, 420], 'A7' : [210, 298], 'A8' : [147, 210],'A9' : [105,147], 'A10' : [74 ,105]}
+	d = {'A0' : [2384,3370]}
 
 	def getType(point):
 		x = point[0]
 		y = point[1]
 		if x > y:
 			x, y = y, x
+		mi = 10**18
 		for i in d:
-			if (x >= d[i][0] - d[i][2] and x <= d[i][0] + d[i][2]) or (y >= d[i][1] - d[i][2] and y <= d[i][1] + d[i][2]):
+			if abs(d[i][0] - x) + abs(d[i][1] - y) < mi:
+				mi = abs(d[i][0] - x) + abs(d[i][1] - y)
+		for i in d:
+			if abs(d[i][0] - x) + abs(d[i][1] - y) == mi:
 				return i
-		return 'unknown'
 
 	for i in d1:
 		if 'x' in i:
 			continue
+		d[i] = [d1[i][0],d1[i][1]]
 		for cnt in range(2,6):
-			d[i + 'x' + str(cnt)] = [d[i][0] * cnt, d[i][1] * cnt, d[i][2]]
+			d[i + 'x' + str(cnt)] = [d1[i][0] * cnt, d1[i][1] * cnt]
 
 	fout = open(outfile, 'a')
 	with fout as sys.stdout:
 		pdfcur = PdfFileReader(open(name, "rb"))
-		print('Документ', os.path.split(name)[1], "из листа", sheet, ':')
-		d2 = {'A0' : [], 'A1' : [], 'A2' : [], 'A3' : [], 'A4' : [], 'A5' : [], 'A6' : [], 'A7' : [], 'A8' : [],'A9' : [], 'A10' : [], 'unknown' : []}
+		print('Документ', os.path.split(name)[1], 'из листа', sheet, ':')
+		d2 = {'A0' : []}
 		for i in d1:
 			if 'x' in i:
 				continue
+			d2[i] = []
 			for cnt in range(2,6):
 				d2[i + 'x' + str(cnt)] = []
 		for i in range(pdfcur.getNumPages()):
@@ -288,7 +289,6 @@ def mergeExcel(sess):
 			print('Файл', i[0], 'был склеен из:', file = report)
 			print(*i[1], sep = '\n', end = '\n\n', file = report)
 		report.close()
-
 
 	report = open(os.path.join(outpath, "Не найденные файлы.txt"), 'w') 
 	if (len(not_found) != 0):
