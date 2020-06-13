@@ -122,34 +122,44 @@ def merge(sess):
 	output = PdfFileWriter()
 	path = os.path.join(DOWNLOAD_FOLDER, sess)
 	files = sorted(os.listdir(path))
+	outputStream = open(os.path.join(UPLOAD_FOLDER, sess) + '.pdf', "wb")
 	for name in files:
-		pdfcur = PdfFileReader(open(os.path.join(path, name), "rb"))
+		f = open(os.path.join(path, name), "rb")
+		pdfcur = PdfFileReader(f)
 		for i in range(pdfcur.getNumPages()):
 			output.addPage(pdfcur.getPage(i))
-	outputStream = open(os.path.join(UPLOAD_FOLDER, sess) + '.pdf', "wb")
-	output.write(outputStream)	
+		output.write(outputStream)
+		f.close()
 	outputStream.close()
 
 def mergeDir(path, outpath):
 	output = PdfFileWriter()
 	files = os.listdir(path)
+	outputStream = open(outpath + '.pdf', "wb")	
 	for name in files:
+		f = open(os.path.join(path, name), "rb")
 		if 'R-LR' in name:
-			pdfcur = PdfFileReader(open(os.path.join(path, name), "rb"))
+			pdfcur = PdfFileReader(f)
 			for i in range(pdfcur.getNumPages()):
 				output.addPage(pdfcur.getPage(i))
+		output.write(outputStream)					
+		f.close()				
 	for name in files:
+		f = open(os.path.join(path, name), "rb")
 		if 'R-LA' in name:
-			pdfcur = PdfFileReader(open(os.path.join(path, name), "rb"))
+			pdfcur = PdfFileReader(f)
 			for i in range(pdfcur.getNumPages()):
 				output.addPage(pdfcur.getPage(i))
+		output.write(outputStream)									
+		f.close()
 	for name in files:
+		f = open(os.path.join(path, name), "rb")            
 		if 'R-LB' in name:
-			pdfcur = PdfFileReader(open(os.path.join(path, name), "rb"))
+			pdfcur = PdfFileReader(f)
 			for i in range(pdfcur.getNumPages()):
 				output.addPage(pdfcur.getPage(i))
-	outputStream = open(outpath + '.pdf', "wb")
-	output.write(outputStream)	
+		output.write(outputStream)									
+		f.close()
 	outputStream.close()
 
 def mergeRecursive(sess):
@@ -167,81 +177,95 @@ def mergeRecursive(sess):
 
 
 def typeCheck(name, outfile, sheet = ''):
-	d1 = {'A0' : [2384, 3370], 'A1' : [1684, 2384], 'A2' : [1191,1684], 'A3' : [842,1191], 'A4' : [595,842], 'A5' : [420, 595], 'A6' : [298, 420], 'A7' : [210, 298], 'A8' : [147, 210],'A9' : [105,147], 'A10' : [74 ,105]}
-	d = {'A0' : [2384,3370]}
+        d1 = {'4A0' : [4768, 6741], '2A0' : [3370, 4768],'A0' : [2384, 3370], 'A1' : [1684, 2384], 'A2' : [1191,1684], 'A3' : [842,1191], 'A4' : [595,842], 'A5' : [420, 595], 'A6' : [298, 420], 'A7' : [210, 298], 'A8' : [147, 210],'A9' : [105,147], 'A10' : [74 ,105]}
+        d = {'A0' : [2384,3370]}
 
-	def getType(point):
-		x = point[0]
-		y = point[1]
-		if x > y:
-			x, y = y, x
-		mi = 10**18
-		for i in d:
-			if abs(d[i][0] - x) + abs(d[i][1] - y) < mi:
-				mi = abs(d[i][0] - x) + abs(d[i][1] - y)
-		for i in d:
-			if abs(d[i][0] - x) + abs(d[i][1] - y) == mi:
-				return i
+        def getType(point):
+                x = point[0]
+                y = point[1]
+                if x > y:
+                        x, y = y, x
+                mi = 10**18
+                for cnt in range(1,5):
+                        for i in d:
+                                if (abs(1 - d[i][0] / x) <= 0.05 *cnt)  and (abs(1 - d[i][1] / y) <= 0.05 * cnt):
+                                        return i
+                for i in d:
+                        if d[i][0] <= x or d[i][1] <= y:
+                                continue
+                        mi = min(mi,max(d[i][0] / x, d[i][1] / y))
+                for i in d:
+                        if d[i][0] <= x or d[i][1] <= y:
+                                continue
+                        if max(d[i][0] / x, d[i][1] / y) <= mi:
+                                return i
+                return '4A0x5'
 
-	for i in d1:
-		if 'x' in i:
-			continue
-		d[i] = [d1[i][0],d1[i][1]]
-		for cnt in range(2,6):
-			d[i + 'x' + str(cnt)] = [d1[i][0] * cnt, d1[i][1] * cnt]
+        for i in d1:
+                if 'x' in i:
+                        continue
+                d[i] = [d1[i][0],d1[i][1]]
+                for cnt in range(2,6):
+                        d[i + 'x' + str(cnt)] = [d1[i][0] * cnt, d1[i][1]]
 
-	fout = open(outfile, 'a')
-	with fout as sys.stdout:
-		pdfcur = PdfFileReader(open(name, "rb"))
-		print('Документ', os.path.split(name)[1], 'из листа', sheet, ':')
-		d2 = {'A0' : []}
-		for i in d1:
-			if 'x' in i:
-				continue
-			d2[i] = []
-			for cnt in range(2,6):
-				d2[i + 'x' + str(cnt)] = []
-		for i in range(pdfcur.getNumPages()):
-			page = pdfcur.getPage(i)
-			point = page.mediaBox.upperRight
-			d2[getType(point)].append(i + 1)
-		noComma = 'kek'
-		for i in d2:
-			if len(d2[i]) > 0:
-				noComma = i
-		for i in d2:
-			if len(d2[i]) == 0:
-				continue
-			last = d2[i][0]
-			for j in range(1,len(d2[i])):
-				if d2[i][j] != d2[i][j-1] + 1:
-					if last == d2[i][j-1]:
-						print(last, end = ', ', sep = '')
-					else:
-						print(last,'-',d2[i][j-1], end = ', ', sep = '')
-					last = d2[i][j]
-			if i == noComma:
-				if last == d2[i][len(d2[i]) - 1]:
-					print(last, '-', i, sep = '')
-				else:
-					print(last, '-', d2[i][len(d2[i]) - 1], '-', i, sep = '')
+        fout = open(outfile, 'a')
+        with fout as sys.stdout:
+                f = open(name, "rb")
+                pdfcur = PdfFileReader(f)
+                print('Документ', os.path.split(name)[1], 'из листа', sheet, ':')
+                d2 = {'A0' : []}
+                for i in d1:
+                        if 'x' in i:
+                                continue
+                        d2[i] = []
+                        for cnt in range(2,6):
+                                d2[i + 'x' + str(cnt)] = []
+                for i in range(pdfcur.getNumPages()):
+                        page = pdfcur.getPage(i)
+                        point = page.mediaBox.upperRight
+                        d2[getType(point)].append(i + 1)
+                noComma = 'kek'
+                for i in d2:
+                        if len(d2[i]) > 0:
+                                noComma = i
+                for i in d2:
+                        if len(d2[i]) == 0:
+                                continue
+                        last = d2[i][0]
+                        for j in range(1,len(d2[i])):
+                                if d2[i][j] != d2[i][j-1] + 1:
+                                        if last == d2[i][j-1]:
+                                                print(last, end = ', ', sep = '')
+                                        else:
+                                                print(last,'-',d2[i][j-1], end = ', ', sep = '')
+                                        last = d2[i][j]
+                        if i == noComma:
+                                if last == d2[i][len(d2[i]) - 1]:
+                                        print(last, '-', i, sep = '')
+                                else:
+                                        print(last, '-', d2[i][len(d2[i]) - 1], '-', i, sep = '')
 
-			else:
-				if last == d2[i][len(d2[i]) - 1]:
-					print(last	, '-', i, end = ',', sep = '')
-					print()
-				else:
-					print(last, '-', d2[i][len(d2[i]) - 1], '-', i, end = ',', sep = '')
-					print()
+                        else:
+                                if last == d2[i][len(d2[i]) - 1]:
+                                        print(last  , '-', i, end = ',', sep = '')
+                                        print()
+                                else:
+                                        print(last, '-', d2[i][len(d2[i]) - 1], '-', i, end = ',', sep = '')
+                                        print()
+                f.close()
 
 def mergeExcel(sess):
 	path = os.path.join(DOWNLOAD_FOLDER, sess)
 	outpath = os.path.join(UPLOAD_FOLDER, sess)
 
 	def addPDF(name, stream):
-		pdfcur = PdfFileReader(open(os.path.join(path, name), "rb"))
+		output = PdfFileWriter()
+		f = open(os.path.join(path, name), "rb")
+		pdfcur = PdfFileReader(f)
 		for i in range(pdfcur.getNumPages()):
-			stream.addPage(pdfcur.getPage(i))
+			output.addPage(pdfcur.getPage(i))
+		output.write(stream)			
+		f.close()
 
 	wb = openpyxl.load_workbook(filename = os.path.join(path, 'merge.xlsx'))
 	sheet = wb[wb.sheetnames[0]]
@@ -275,14 +299,11 @@ def mergeExcel(sess):
 		for i in d.items():
 			fout, files = i[0], i[1]
 			fout = os.path.join(outpath, sheet_name, str(fout))
-			
-			output = PdfFileWriter()
-			for item in files:
-				addPDF(item, output)
-		
 			os.makedirs(os.path.split(fout)[0], exist_ok=True)
-			outputStream = open(fout + '.pdf', "wb")
-			output.write(outputStream)
+			outputStream = open(fout + '.pdf', "wb")			
+			for item in files:
+				addPDF(item, outputStream)
+		
 			outputStream.close()
 		report = open(os.path.join(outpath, "Отчет.txt"), 'a')
 		for i in d.items():
