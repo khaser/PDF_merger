@@ -22,7 +22,7 @@ def downloadFolder(files, sess, saveFullPath = 0):
 	path = os.path.join(DOWNLOAD_FOLDER, sess)
 	os.makedirs(path, exist_ok = True)
 	cnt = 0
-	for data in files:
+	for data in files: 
 		if (allowedFile(data.filename, 'pdf')):
 			cnt += 1
 			if (saveFullPath):
@@ -177,82 +177,82 @@ def mergeRecursive(sess):
 
 
 def typeCheck(name, outfile, sheet = ''):
-        d1 = {'4A0' : [4768, 6741], '2A0' : [3370, 4768],'A0' : [2384, 3370], 'A1' : [1684, 2384], 'A2' : [1191,1684], 'A3' : [842,1191], 'A4' : [595,842], 'A5' : [420, 595], 'A6' : [298, 420], 'A7' : [210, 298], 'A8' : [147, 210],'A9' : [105,147], 'A10' : [74 ,105]}
-        d = {'A0' : [2384,3370]}
+		d1 = {'4A0' : [4768, 6741], '2A0' : [3370, 4768],'A0' : [2384, 3370], 'A1' : [1684, 2384], 'A2' : [1191,1684], 'A3' : [842,1191], 'A4' : [595,842], 'A5' : [420, 595], 'A6' : [298, 420], 'A7' : [210, 298], 'A8' : [147, 210],'A9' : [105,147], 'A10' : [74 ,105]}
+		d = {'A0' : [2384,3370]}
 
-        def getType(point):
-                x = point[0]
-                y = point[1]
-                if x > y:
-                        x, y = y, x
-                mi = 10**18
-                for cnt in range(1,5):
-                        for i in d:
-                                if (abs(1 - d[i][0] / x) <= 0.05 *cnt)  and (abs(1 - d[i][1] / y) <= 0.05 * cnt):
-                                        return i
-                for i in d:
-                        if d[i][0] <= x or d[i][1] <= y:
-                                continue
-                        mi = min(mi,max(d[i][0] / x, d[i][1] / y))
-                for i in d:
-                        if d[i][0] <= x or d[i][1] <= y:
-                                continue
-                        if max(d[i][0] / x, d[i][1] / y) <= mi:
-                                return i
-                return '4A0x5'
+		def getType(point):
+				x = point[0]
+				y = point[1]
+				if x > y:
+						x, y = y, x
+				mi = 10**18
+				for cnt in range(1,5):
+						for i in d:
+								if (abs(1 - d[i][0] / x) <= 0.05 *cnt)  and (abs(1 - d[i][1] / y) <= 0.05 * cnt):
+										return i
+				for i in d:
+						if d[i][0] <= x or d[i][1] <= y:
+								continue
+						mi = min(mi,max(d[i][0] / x, d[i][1] / y))
+				for i in d:
+						if d[i][0] <= x or d[i][1] <= y:
+								continue
+						if max(d[i][0] / x, d[i][1] / y) <= mi:
+								return i
+				return '4A0x5'
 
-        for i in d1:
-                if 'x' in i:
-                        continue
-                d[i] = [d1[i][0],d1[i][1]]
-                for cnt in range(2,6):
-                        d[i + 'x' + str(cnt)] = [d1[i][0] * cnt, d1[i][1]]
+		for i in d1:
+				if 'x' in i:
+						continue
+				d[i] = [d1[i][0],d1[i][1]]
+				for cnt in range(2,6):
+						d[i + 'x' + str(cnt)] = [d1[i][0] * cnt, d1[i][1]]
 
-        fout = open(outfile, 'a')
-        with fout as sys.stdout:
-                f = open(name, "rb")
-                pdfcur = PdfFileReader(f)
-                print('Документ', os.path.split(name)[1], 'из листа', sheet, ':')
-                d2 = {'A0' : []}
-                for i in d1:
-                        if 'x' in i:
-                                continue
-                        d2[i] = []
-                        for cnt in range(2,6):
-                                d2[i + 'x' + str(cnt)] = []
-                for i in range(pdfcur.getNumPages()):
-                        page = pdfcur.getPage(i)
-                        point = page.mediaBox.upperRight
-                        d2[getType(point)].append(i + 1)
-                noComma = 'kek'
-                for i in d2:
-                        if len(d2[i]) > 0:
-                                noComma = i
-                for i in d2:
-                        if len(d2[i]) == 0:
-                                continue
-                        last = d2[i][0]
-                        for j in range(1,len(d2[i])):
-                                if d2[i][j] != d2[i][j-1] + 1:
-                                        if last == d2[i][j-1]:
-                                                print(last, end = ', ', sep = '')
-                                        else:
-                                                print(last,'-',d2[i][j-1], end = ', ', sep = '')
-                                        last = d2[i][j]
-                        if i == noComma:
-                                if last == d2[i][len(d2[i]) - 1]:
-                                        print(last, '-', i, sep = '')
-                                else:
-                                        print(last, '-', d2[i][len(d2[i]) - 1], '-', i, sep = '')
+		fout = open(outfile, 'a')
+		with fout as sys.stdout:
+				f = open(name, "rb")
+				pdfcur = PdfFileReader(f)
+				print('Документ', os.path.split(name)[1], 'из листа', sheet, ':')
+				d2 = {'A0' : []}
+				for i in d1:
+						if 'x' in i:
+								continue
+						d2[i] = []
+						for cnt in range(2,6):
+								d2[i + 'x' + str(cnt)] = []
+				for i in range(pdfcur.getNumPages()):
+						page = pdfcur.getPage(i)
+						point = page.mediaBox.upperRight
+						d2[getType(point)].append(i + 1)
+				noComma = 'kek'
+				for i in d2:
+						if len(d2[i]) > 0:
+								noComma = i
+				for i in d2:
+						if len(d2[i]) == 0:
+								continue
+						last = d2[i][0]
+						for j in range(1,len(d2[i])):
+								if d2[i][j] != d2[i][j-1] + 1:
+										if last == d2[i][j-1]:
+												print(last, end = ', ', sep = '')
+										else:
+												print(last,'-',d2[i][j-1], end = ', ', sep = '')
+										last = d2[i][j]
+						if i == noComma:
+								if last == d2[i][len(d2[i]) - 1]:
+										print(last, '-', i, sep = '')
+								else:
+										print(last, '-', d2[i][len(d2[i]) - 1], '-', i, sep = '')
 
-                        else:
-                                if last == d2[i][len(d2[i]) - 1]:
-                                        print(last  , '-', i, end = ',', sep = '')
-                                        print()
-                                else:
-                                        print(last, '-', d2[i][len(d2[i]) - 1], '-', i, end = ',', sep = '')
-                                        print()
-                f.close()
+						else:
+								if last == d2[i][len(d2[i]) - 1]:
+										print(last  , '-', i, end = ',', sep = '')
+										print()
+								else:
+										print(last, '-', d2[i][len(d2[i]) - 1], '-', i, end = ',', sep = '')
+										print()
+				f.close()
 
 def mergeExcel(sess):
 	path = os.path.join(DOWNLOAD_FOLDER, sess)
@@ -268,7 +268,6 @@ def mergeExcel(sess):
 		f.close()
 
 	wb = openpyxl.load_workbook(filename = os.path.join(path, 'merge.xlsx'))
-	sheet = wb[wb.sheetnames[0]]
 
 	not_found = []
 
