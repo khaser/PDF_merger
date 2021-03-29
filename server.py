@@ -125,7 +125,7 @@ def merge(sess):
 	outputStream = open(os.path.join(UPLOAD_FOLDER, sess) + '.pdf', "wb")
 	for name in files:
 		f = open(os.path.join(path, name), "rb")
-		pdfcur = PdfFileReader(f)
+		pdfcur = PdfFileReader(f, strict = False)
 		for i in range(pdfcur.getNumPages()):
 			output.addPage(pdfcur.getPage(i))
 		output.write(outputStream)
@@ -139,7 +139,7 @@ def mergeDir(path, outpath):
 	for name in files:
 		f = open(os.path.join(path, name), "rb")
 		if 'R-LR' in name:
-			pdfcur = PdfFileReader(f)
+			pdfcur = PdfFileReader(f, strict = False)
 			for i in range(pdfcur.getNumPages()):
 				output.addPage(pdfcur.getPage(i))
 		output.write(outputStream)					
@@ -147,7 +147,7 @@ def mergeDir(path, outpath):
 	for name in files:
 		f = open(os.path.join(path, name), "rb")
 		if 'R-LA' in name:
-			pdfcur = PdfFileReader(f)
+			pdfcur = PdfFileReader(f, strict = False)
 			for i in range(pdfcur.getNumPages()):
 				output.addPage(pdfcur.getPage(i))
 		output.write(outputStream)									
@@ -155,7 +155,7 @@ def mergeDir(path, outpath):
 	for name in files:
 		f = open(os.path.join(path, name), "rb")            
 		if 'R-LB' in name:
-			pdfcur = PdfFileReader(f)
+			pdfcur = PdfFileReader(f, strict = False)
 			for i in range(pdfcur.getNumPages()):
 				output.addPage(pdfcur.getPage(i))
 		output.write(outputStream)									
@@ -211,7 +211,7 @@ def typeCheck(name, outfile, sheet = ''):
 		fout = open(outfile, 'a')
 		with fout as sys.stdout:
 				f = open(name, "rb")
-				pdfcur = PdfFileReader(f)
+				pdfcur = PdfFileReader(f, strict = False)
 				print('Документ', os.path.split(name)[1], 'из листа', sheet, ':')
 				d2 = {'A0' : []}
 				for i in d1:
@@ -261,7 +261,7 @@ def mergeExcel(sess):
 	def addPDF(name, stream):
 		output = PdfFileWriter()
 		f = open(os.path.join(path, name), "rb")
-		pdfcur = PdfFileReader(f)
+		pdfcur = PdfFileReader(f, strict = False)
 		for i in range(pdfcur.getNumPages()):
 			output.addPage(pdfcur.getPage(i))
 		output.write(stream)			
